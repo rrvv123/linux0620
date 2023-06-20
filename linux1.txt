@@ -1,0 +1,95 @@
+root@polystudent-virtual-machine:~/바탕화면# cd
+root@polystudent-virtual-machine:~# apt-get -y install vsftpd
+패키지 목록을 읽는 중입니다... 완료
+의존성 트리를 만드는 중입니다... 완료
+상태 정보를 읽는 중입니다... 완료        
+다음 새 패키지를 설치할 것입니다:
+  vsftpd
+0개 업그레이드, 1개 새로 설치, 0개 제거 및 10개 업그레이드 안 함.
+115 k바이트 아카이브를 받아야 합니다.
+이 작업 후 334 k바이트의 디스크 공간을 더 사용하게 됩니다.
+받기:1 http://mirror.kakao.com/ubuntu bionic/main amd64 vsftpd amd64 3.0.3-9build1 [115 kB]
+내려받기 115 k바이트, 소요시간 0초 (704 k바이트/초)
+패키지를 미리 설정하는 중입니다...
+Selecting previously unselected package vsftpd.
+(데이터베이스 읽는중 ...현재 206825개의 파일과 디렉터리가 설치되어 있습니다.)
+Preparing to unpack .../vsftpd_3.0.3-9build1_amd64.deb ...
+Unpacking vsftpd (3.0.3-9build1) ...
+vsftpd (3.0.3-9build1) 설정하는 중입니다 ...
+Created symlink /etc/systemd/system/multi-user.target.wants/vsftpd.service → /lib/systemd/system/vsftpd.service.
+Processing triggers for man-db (2.10.2-1) ...
+root@polystudent-virtual-machine:~# /etc/vsftpd.conf
+bash: /etc/vsftpd.conf: 허가 거부
+root@polystudent-virtual-machine:~# nano /etc/vsftpd.conf
+root@polystudent-virtual-machine:~# cd /srv/ftp
+root@polystudent-virtual-machine:/srv/ftp# ls
+root@polystudent-virtual-machine:/srv/ftp# mkdir pub
+root@polystudent-virtual-machine:/srv/ftp# ls -l
+합계 4
+drwxr-xr-x 2 root root 4096  6월 20 09:23 pub
+root@polystudent-virtual-machine:/srv/ftp# chmod 777 pub
+root@polystudent-virtual-machine:/srv/ftp# ls -l
+합계 4
+drwxrwxrwx 2 root root 4096  6월 20 09:23 pub
+root@polystudent-virtual-machine:/srv/ftp# mkdir file1
+root@polystudent-virtual-machine:/srv/ftp# rm file1
+rm: 'file1'을(를) 제거할 수 없습니다: 디렉터리입니다
+root@polystudent-virtual-machine:/srv/ftp# cd pub
+root@polystudent-virtual-machine:/srv/ftp/pub# mkdir file1
+root@polystudent-virtual-machine:/srv/ftp/pub# ls -l
+합계 4
+drwxr-xr-x 2 root root 4096  6월 20 09:25 file1
+root@polystudent-virtual-machine:/srv/ftp/pub# chmod 777 file1
+root@polystudent-virtual-machine:/srv/ftp/pub# ls -l
+합계 4
+drwxrwxrwx 2 root root 4096  6월 20 09:25 file1
+root@polystudent-virtual-machine:/srv/ftp/pub# cp /boot/vm* file1
+root@polystudent-virtual-machine:/srv/ftp/pub# cd file1
+root@polystudent-virtual-machine:/srv/ftp/pub/file1# ls
+vmlinuz  vmlinuz-5.19.0-32-generic  vmlinuz-5.19.0-35-generic  vmlinuz.old
+root@polystudent-virtual-machine:/srv/ftp/pub/file1# systemctl restart vsftpd
+root@polystudent-virtual-machine:/srv/ftp/pub/file1# systemctl enable vsftpd
+Synchronizing state of vsftpd.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable vsftpd
+root@polystudent-virtual-machine:/srv/ftp/pub/file1# systemctl status vsftpd
+● vsftpd.service - vsftpd FTP server
+     Loaded: loaded (/lib/systemd/system/vsftpd.service; enabled; vendor preset>
+     Active: active (running) since Tue 2023-06-20 09:28:00 KST; 42s ago
+   Main PID: 2985 (vsftpd)
+      Tasks: 1 (limit: 4573)
+     Memory: 692.0K
+        CPU: 7ms
+     CGroup: /system.slice/vsftpd.service
+             └─2985 /usr/sbin/vsftpd /etc/vsftpd.conf
+
+ 6월 20 09:28:00 polystudent-virtual-machine systemd[1]: Starting vsftpd FTP se>
+ 6월 20 09:28:00 polystudent-virtual-machine systemd[1]: Started vsftpd FTP ser>
+root@polystudent-virtual-machine:/srv/ftp/pub/file1# ufw allow ftp
+규칙이 추가되었습니다
+규칙이 추가되었습니다 (v6)
+root@polystudent-virtual-machine:/srv/ftp/pub/file1# systemctl stop ufw
+root@polystudent-virtual-machine:/srv/ftp/pub/file1# ifconfig
+ens33: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.91.128  netmask 255.255.255.0  broadcast 192.168.91.255
+        inet6 fe80::2367:5f87:3446:6b52  prefixlen 64  scopeid 0x20<link>
+        ether 00:0c:29:97:10:07  txqueuelen 1000  (Ethernet)
+        RX packets 12692  bytes 18083456 (18.0 MB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 2238  bytes 180450 (180.4 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 165  bytes 15145 (15.1 KB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 165  bytes 15145 (15.1 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+root@polystudent-virtual-machine:/srv/ftp/pub/file1# cd ..
+root@polystudent-virtual-machine:/srv/ftp/pub# ls
+file1
+root@polystudent-virtual-machine:/srv/ftp/pub# ls
+file1  test.html
+root@polystudent-virtual-machine:/srv/ftp/pub# 
