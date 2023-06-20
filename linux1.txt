@@ -93,3 +93,4 @@ file1
 root@polystudent-virtual-machine:/srv/ftp/pub# ls
 file1  test.html
 root@polystudent-virtual-machine:/srv/ftp/pub# 
+http://192.168.91.128/xe/
